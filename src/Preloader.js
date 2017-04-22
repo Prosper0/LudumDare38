@@ -39,6 +39,8 @@ BasicGame.Preloader.prototype = {
 		this.load.image('heroWeaponCannon', 'assets/image/cannon-tower.png');
 		this.load.image('bullet', 'assets/image/bullet.png');
 
+		this.load.image('enemy1', 'assets/image/enemy01.png');
+
 	},
 
 	create: function () {
