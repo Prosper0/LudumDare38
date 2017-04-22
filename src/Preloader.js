@@ -20,7 +20,7 @@ BasicGame.Preloader.prototype = {
         this.background.height = this.game.height;
         this.background.width = this.game.width;
         this.background.smoothed = false;
-		
+
 		this.preloadBar = this.add.sprite(300, 200, 'preloaderBar');
 
 		//	This sets the preloadBar sprite as a loader sprite.
@@ -36,6 +36,8 @@ BasicGame.Preloader.prototype = {
 		this.load.audio('titleMusic', ['assets/audio/main_menu.mp3']);
 		//this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
 		this.load.image('gameBackground', 'assets/image/background01.png');
+		this.load.image('heroWeaponCannon', 'assets/image/cannon-tower.png');
+		this.load.image('bullet', 'assets/image/bullet.png');
 
 	},
 
