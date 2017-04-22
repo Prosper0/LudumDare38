@@ -14,7 +14,11 @@ BasicGame.Game = function (game) {
     this.nextFire = 0;
 
     this.enemies = null;
-    this.createEnemyAllowed = false;
+    this.enemiesTotal = 0;
+    this.enemiesAlive = 0;
+    this.spawnEnemyAllowed = false;
+    this.enemiesSpawnTime = 0;
+    this.lastSpawnTime = 0;
 
     this.game;      //  a reference to the currently running game (Phaser.Game)
     this.add;       //  used to add sprites, text, groups, etc (Phaser.GameObjectFactory)
@@ -69,8 +73,11 @@ BasicGame.Game.prototype = {
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
 
-        //  Create some baddies to waste :)
+        //  Create some aliens
         this.enemies = [];
+        this.enemiesSpawnTime = this.game.rnd.integerInRange(2500, 5000);
+        this.lastSpawnTime = this.game.time.time;
+        this.spawnEnemyAllowed = true;
 
     },
 
@@ -90,10 +97,14 @@ BasicGame.Game.prototype = {
             this.fireBullet();
         }
 
-        if(this.createEnemyAllowed == false)
+        if(this.spawnEnemyAllowed == true)
         {
-            this.createEnemyAllowed = true;
-            this.createEnemy();
+            var current_time = this.game.time.time;
+            if(current_time - this.lastSpawnTime > this.enemiesSpawnTime){
+                this.enemiesSpawnTime = this.game.rnd.integerInRange(2500, 5000);
+                this.lastSpawnTime = current_time;
+                this.createEnemy();
+            }
         }
 
         /*if (this.cursors.up.isDown)
@@ -107,7 +118,7 @@ BasicGame.Game.prototype = {
 
         for (var i = 0; i < this.enemies.length; i++)
         {
-            this.game.physics.arcade.overlap(this.bullets, this.enemies[i], this.bulletHitEnemy, null, this);
+            this.game.physics.arcade.overlap(this.bullets, this.enemies[i].enemyBody, this.bulletHitEnemy, null, this);
         }
 
     },
@@ -124,8 +135,8 @@ BasicGame.Game.prototype = {
 
     render: function () {
 
-        this.game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
-        this.game.debug.spriteInfo(this.heroCannon, 32, 400);
+        //this.game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
+        //this.game.debug.spriteInfo(this.heroCannon, 32, 400);
 
     },
 
@@ -163,6 +174,7 @@ BasicGame.Game.prototype = {
 
     createEnemy: function () {
 
+        /*
         var enemy1 = this.add.sprite(this.game.world.randomX, 180, 'enemy1');
         enemy1.anchor.setTo(0.5, 0.5);
         this.game.physics.enable(enemy1, Phaser.Physics.ARCADE);
@@ -172,7 +184,11 @@ BasicGame.Game.prototype = {
         for (var i = 0; i < 1; i++)
         {
             this.enemies.push(enemy1);
-        }
+        }*/
+
+        this.enemiesTotal = this.enemiesTotal + 1;
+        //this.enemies.push(new AlienEnemy("enemy1", this.enemiesTotal, this.game, this.heroCannon));
+        this.enemies.push(new EnemyUfo(this.enemiesTotal, this.game, this.heroCannon));
 
     },
 
@@ -180,17 +196,97 @@ BasicGame.Game.prototype = {
 
         bullet.kill();
 
-        //var destroyed = enemies[tank.name].damage();
-        var destroy = true;
+        //var destroyed = this.enemies[enemy.name].damage();
+        var enemyObj = this.enemies.filter(function ( obj ) {
+            return obj.name === enemy.name;
+        })[0];
 
-        if (destroy)
+        var destroyed = enemyObj.damage();
+        //var destroyed = enemy.damage();
+
+        if (destroyed)
         {
+            console.log('Enemy dead:' + enemy.name);
             //var explosionAnimation = explosions.getFirstExists(false);
             //explosionAnimation.reset(tank.x, tank.y);
             //explosionAnimation.play('kaboom', 30, false, true);
-            enemy.kill();
+            //enemy.kill();
+            /*for (var i =0; i < enemies.length; i++) {
+                if (enemies[i].name === enemy.name) {
+                    enemies.splice(i, 1);
+                    break;
+                }
+            }*/
         }
 
     }
 
 };
+
+var AlienEnemy = function AlienEnemy(enemyType, enemyId, game, playerHero) { //enemyType, 
+
+    this.game = game;
+    this.playerHero = playerHero;
+
+    var x = this.game.world.randomX;
+    var y = 180;
+
+    this.alive = true;
+
+    // TODO Based on enemytype
+    this.enemyType = enemyType;
+    /*this.health = 1;
+    this.damagePoints = 1;
+    this.enemySpeed = 100;
+    this.enemySpeedTime = 3000;*/
+    this.enemySprite = enemyType;
+
+    this.enemyBody = this.game.add.sprite(x, y, this.enemySprite);
+
+    this.enemyBody.anchor.setTo(0.5, 0.5);
+    game.physics.enable(this.enemyBody, Phaser.Physics.ARCADE);
+    game.physics.arcade.moveToObject(this.enemyBody, this.playerHero, this.enemySpeed, this.enemySpeedTime);
+    this.game.add.tween(this.enemyBody.scale).to({ x: 2.5, y: 2.5 }, this.enemySpeedTime, Phaser.Easing.Quadratic.Out, true, this.enemySpeed);
+    
+    this.enemyBody.name = this.enemyType + enemyId.toString();
+    this.name = this.enemyType + enemyId.toString();
+
+}
+
+AlienEnemy.prototype.damage = function() {
+
+    this.health -= 1;
+
+    if (this.health <= 0)
+    {
+        this.alive = false;
+        this.enemyBody.kill();
+        return true;
+    }
+
+    return false;
+
+}
+
+AlienEnemy.prototype.update = function() {
+
+    if (this.game.physics.arcade.distanceBetween(this.enemyBody, this.playerHero) < 300)
+    {
+        // Start screaming when closing in?
+    }
+
+};
+
+var EnemyUfo = function (index, game, playerHero) {
+
+    this.enemyType = "enemy1";
+    this.health = 1;
+    this.damagePoints = 1;
+    this.enemySpeed = 100;
+    this.enemySpeedTime = 3000;
+    AlienEnemy.call(this, this.enemyType, index, game, playerHero);
+
+}
+
+EnemyUfo.prototype.constructor = EnemyUfo;
+EnemyUfo.prototype = Object.create(AlienEnemy.prototype);
