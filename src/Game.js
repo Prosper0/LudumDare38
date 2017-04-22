@@ -3,6 +3,8 @@ BasicGame.Game = function (game) {
 
     //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
 
+    this.background = null;
+
     this.game;      //  a reference to the currently running game (Phaser.Game)
     this.add;       //  used to add sprites, text, groups, etc (Phaser.GameObjectFactory)
     this.camera;    //  a reference to the game camera (Phaser.Camera)
@@ -30,7 +32,12 @@ BasicGame.Game.prototype = {
     create: function () {
 
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
-        this.add.sprite(0, 0, 'gameBackground');
+        this.background = this.add.sprite(0, 0, 'gameBackground');
+        this.background.x = 0;
+        this.background.y = 0;
+        this.background.height = this.game.height;
+        this.background.width = this.game.width;
+        this.background.smoothed = false;
 
     },
 
