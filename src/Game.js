@@ -4,6 +4,14 @@ BasicGame.Game = function (game) {
     //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
 
     this.background = null;
+    this.heroCannon = null;
+
+    this.cursors = null;
+    this.fireKey = null;
+
+    this.bullets = null;
+    this.fireRate = 100;
+    this.nextFire = 0;
 
     this.game;      //  a reference to the currently running game (Phaser.Game)
     this.add;       //  used to add sprites, text, groups, etc (Phaser.GameObjectFactory)
@@ -31,6 +39,8 @@ BasicGame.Game.prototype = {
 
     create: function () {
 
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
         this.background = this.add.sprite(0, 0, 'gameBackground');
         this.background.x = 0;
@@ -38,12 +48,50 @@ BasicGame.Game.prototype = {
         this.background.height = this.game.height;
         this.background.width = this.game.width;
         this.background.smoothed = false;
+        //this.background.anchor.setTo(0.5, 0.5);
+
+        this.heroCannon = this.add.sprite(320, 470, 'heroWeaponCannon');
+        this.game.physics.enable(this.heroCannon, Phaser.Physics.ARCADE);
+        this.heroCannon.anchor.setTo(0.5, 0.5);
+        this.heroCannon.scale.setTo(2, 2);
+
+        this.bullets = this.game.add.group();
+        this.bullets.enableBody = true;
+        this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+        this.bullets.createMultiple(50, 'bullet');
+        this.bullets.setAll('checkWorldBounds', true);
+        this.bullets.setAll('outOfBoundsKill', true);
+
+        this.cursors = this.game.input.keyboard.createCursorKeys();
+        this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
 
     },
 
     update: function () {
 
-        //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
+        if (this.cursors.left.isDown)
+        {
+            this.heroCannon.angle -= 1;
+        }
+        else if (this.cursors.right.isDown)
+        {
+            this.heroCannon.angle += 1;
+        }
+
+        if (this.fireKey.isDown)
+        {
+            this.fireBullet();
+        }
+
+        /*if (this.cursors.up.isDown)
+        {
+            this.game.world.rotation += 0.05;
+        }
+        else if (this.cursors.down.isDown)
+        {
+            this.game.world.rotation -= 0.05;
+        }*/
 
     },
 
@@ -54,6 +102,33 @@ BasicGame.Game.prototype = {
 
         //  Then let's go back to the main menu.
         this.state.start('MainMenu');
+
+    },
+
+    render: function () {
+
+        this.game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
+        this.game.debug.spriteInfo(this.heroCannon, 32, 400);
+
+    },
+
+    fireBullet: function () {
+
+        if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
+        {
+            this.nextFire = this.game.time.now + this.fireRate;
+
+            var bullet = this.bullets.getFirstDead();
+
+            bullet.reset(this.heroCannon.x - 10, this.heroCannon.y - 110);
+
+            //this.game.physics.arcade.moveToPointer(bullet, 300);
+
+            //this.bullet.body.velocity.y = -300;
+            //this.game.physics.arcade.velocityFromAngle(this.heroCannon.angle, 300, sprite.body.velocity);
+            this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
+            //bulletTime = game.time.now + 250;
+        }
 
     }
 
