@@ -13,6 +13,9 @@ BasicGame.Game = function (game) {
     this.fireRate = 100;
     this.nextFire = 0;
 
+    this.enemies = null;
+    this.createEnemyAllowed = false;
+
     this.game;      //  a reference to the currently running game (Phaser.Game)
     this.add;       //  used to add sprites, text, groups, etc (Phaser.GameObjectFactory)
     this.camera;    //  a reference to the game camera (Phaser.Camera)
@@ -66,6 +69,9 @@ BasicGame.Game.prototype = {
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
 
+        //  Create some baddies to waste :)
+        this.enemies = [];
+
     },
 
     update: function () {
@@ -84,6 +90,12 @@ BasicGame.Game.prototype = {
             this.fireBullet();
         }
 
+        if(this.createEnemyAllowed == false)
+        {
+            this.createEnemyAllowed = true;
+            this.createEnemy();
+        }
+
         /*if (this.cursors.up.isDown)
         {
             this.game.world.rotation += 0.05;
@@ -92,6 +104,11 @@ BasicGame.Game.prototype = {
         {
             this.game.world.rotation -= 0.05;
         }*/
+
+        for (var i = 0; i < this.enemies.length; i++)
+        {
+            this.game.physics.arcade.overlap(this.bullets, this.enemies[i], this.bulletHitEnemy, null, this);
+        }
 
     },
 
@@ -127,8 +144,11 @@ BasicGame.Game.prototype = {
             bullet.angle = this.heroCannon.angle;
             */
             var bullet = this.bullets.getFirstDead();
+            bullet.scale.setTo(1, 1);
             bullet.reset(this.heroCannon.x - 10, this.heroCannon.y);
             bullet.angle = this.heroCannon.angle;
+
+            this.add.tween(bullet.scale).to({ x: 0.2, y: 0.2 }, 1000, Phaser.Easing.Quadratic.Out, true, 100);
 
             //this.game.physics.arcade.moveToPointer(bullet, 300);
 
@@ -137,6 +157,38 @@ BasicGame.Game.prototype = {
             this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
             //this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
             //bulletTime = game.time.now + 250;
+        }
+
+    },
+
+    createEnemy: function () {
+
+        var enemy1 = this.add.sprite(this.game.world.randomX, 180, 'enemy1');
+        enemy1.anchor.setTo(0.5, 0.5);
+        this.game.physics.enable(enemy1, Phaser.Physics.ARCADE);
+        this.game.physics.arcade.moveToObject(enemy1, this.heroCannon, 100, 3000);
+        this.add.tween(enemy1.scale).to({ x: 2.5, y: 2.5 }, 3000, Phaser.Easing.Quadratic.Out, true, 100);
+
+        for (var i = 0; i < 1; i++)
+        {
+            this.enemies.push(enemy1);
+        }
+
+    },
+
+    bulletHitEnemy: function (enemy, bullet) {
+
+        bullet.kill();
+
+        //var destroyed = enemies[tank.name].damage();
+        var destroy = true;
+
+        if (destroy)
+        {
+            //var explosionAnimation = explosions.getFirstExists(false);
+            //explosionAnimation.reset(tank.x, tank.y);
+            //explosionAnimation.play('kaboom', 30, false, true);
+            enemy.kill();
         }
 
     }
