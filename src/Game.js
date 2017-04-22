@@ -3,7 +3,9 @@ BasicGame.Game = function (game) {
 
     //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
 
-    this.background = null;
+    //this.background = null;
+    this.backgroundSky = null;
+    this.backgroundGround = null;
     this.heroCannon = null;
 
     this.cursors = null;
@@ -48,13 +50,22 @@ BasicGame.Game.prototype = {
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
-        this.background = this.add.sprite(0, 0, 'gameBackground');
-        this.background.x = 0;
-        this.background.y = 0;
-        this.background.height = this.game.height;
+        //this.background = this.add.sprite(0, 0, 'gameBackground');
+        this.backgroundSky = this.add.sprite(0, 0, 'gameBackgroundSky');
+        this.backgroundGround = this.add.sprite(0, 0, 'gameBackgroundGround');
+        this.backgroundSky.x = 0;
+        this.backgroundSky.y = 0;
+        this.backgroundGround.x = 0;
+        this.backgroundGround.y = 0;
+        this.backgroundSky.scale.setTo(3, 3);
+        this.backgroundGround.scale.setTo(3, 3);
+        this.game.physics.enable(this.backgroundSky, Phaser.Physics.ARCADE);
+        this.game.physics.enable(this.backgroundGround, Phaser.Physics.ARCADE);
+        this.backgroundSky.body.immovable = true;
+        this.backgroundSky.body.moves = false;
+        /*this.background.height = this.game.height;
         this.background.width = this.game.width;
-        this.background.smoothed = false;
+        this.background.smoothed = false;*/
         //this.background.anchor.setTo(0.5, 0.5);
 
         this.bullets = this.game.add.group();
@@ -65,10 +76,10 @@ BasicGame.Game.prototype = {
         this.bullets.setAll('checkWorldBounds', true);
         this.bullets.setAll('outOfBoundsKill', true);
 
-        this.heroCannon = this.add.sprite(320, 470, 'heroWeaponCannon');
+        this.heroCannon = this.add.sprite(480, 720, 'heroWeaponCannon');
         this.game.physics.enable(this.heroCannon, Phaser.Physics.ARCADE);
         this.heroCannon.anchor.setTo(0.5, 0.5);
-        this.heroCannon.scale.setTo(2, 2);
+        this.heroCannon.scale.setTo(3, 3);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
@@ -120,6 +131,8 @@ BasicGame.Game.prototype = {
         {
             this.game.physics.arcade.overlap(this.bullets, this.enemies[i].enemyBody, this.bulletHitEnemy, null, this);
         }
+
+        this.bullets.forEachAlive( this.killIfBulletIsOutOfWorld, this ); // function(box) {  if(box.y < 300) { box.kill(); }  }
 
     },
 
@@ -189,6 +202,9 @@ BasicGame.Game.prototype = {
         this.enemiesTotal = this.enemiesTotal + 1;
         //this.enemies.push(new AlienEnemy("enemy1", this.enemiesTotal, this.game, this.heroCannon));
         this.enemies.push(new EnemyUfo(this.enemiesTotal, this.game, this.heroCannon));
+        this.enemiesTotal = this.enemiesTotal + 1;
+        //this.enemies.push(new AlienEnemy("enemy1", this.enemiesTotal, this.game, this.heroCannon));
+        this.enemies.push(new EnemyFrog(this.enemiesTotal, this.game, this.heroCannon));
 
     },
 
@@ -219,6 +235,25 @@ BasicGame.Game.prototype = {
             }*/
         }
 
+    },
+
+    killIfBulletIsOutOfWorld: function (bullet) {
+
+        var hej = this.game.height;
+        var distanceToCannon = this.game.height - bullet.y;
+        var offs = Math.abs(20 * Math.sin(this.game.math.degToRad(this.heroCannon.angle)));
+        offs = offs * 5;
+        console.log("Offset:"+offs);
+        var dist2 = Phaser.Math.distance(this.heroCannon.x , this.heroCannon.y , bullet.x , bullet.y);
+        //if (this.game.physics.arcade.distanceBetween(bullet, this.heroCannon) > 450)
+        if(offs > 10 && offs < 64)
+            offs = 10;
+
+        if(dist2 > (430 + offs))
+        { 
+            bullet.kill(); 
+        }
+
     }
 
 };
@@ -228,8 +263,12 @@ var AlienEnemy = function AlienEnemy(enemyType, enemyId, game, playerHero) { //e
     this.game = game;
     this.playerHero = playerHero;
 
-    var x = this.game.world.randomX;
-    var y = 180;
+    //var x = this.game.world.randomX;
+    var yPos = [350, 300, 280, 310, 370];
+    var xPos = [100, 300, 500, 700, 900];
+    var randI = Math.floor(Math.random() * yPos.length);
+    var y = yPos[randI];
+    var x = xPos[randI];
 
     this.alive = true;
 
@@ -242,10 +281,22 @@ var AlienEnemy = function AlienEnemy(enemyType, enemyId, game, playerHero) { //e
     this.enemySprite = enemyType;
 
     this.enemyBody = this.game.add.sprite(x, y, this.enemySprite);
+    this.enemyBody.animations.add('moving');
+    this.enemyBody.animations.play('moving', 5, true);
 
     this.enemyBody.anchor.setTo(0.5, 0.5);
+    this.enemyBody.scale.setTo(0.2, 0.2);
     game.physics.enable(this.enemyBody, Phaser.Physics.ARCADE);
-    game.physics.arcade.moveToObject(this.enemyBody, this.playerHero, this.enemySpeed, this.enemySpeedTime);
+    //game.physics.arcade.moveToObject(this.enemyBody, this.playerHero, this.enemySpeed, this.enemySpeedTime);
+    game.physics.arcade.moveToXY(this.enemyBody, this.playerHero.x, this.playerHero.y, this.enemySpeed, this.enemySpeedTime);
+    /*
+    this.game.add.tween(this.enemyBody).to({ y: this.game.height },
+        this.enemySpeedTime, Phaser.Easing.Linear.InOut, true, 0, Number.POSITIVE_INFINITY);
+
+    this.game.add.tween(this.enemyBody).to({ x: this.playerHero.x },
+        this.enemySpeedTime, Phaser.Easing.Sinusoidal.Out, true, 0, Number.POSITIVE_INFINITY);*/
+    //this.enemyBody.body.acceleration.x = -1000;
+
     this.game.add.tween(this.enemyBody.scale).to({ x: 2.5, y: 2.5 }, this.enemySpeedTime, Phaser.Easing.Quadratic.Out, true, this.enemySpeed);
     
     this.enemyBody.name = this.enemyType + enemyId.toString();
@@ -277,9 +328,10 @@ AlienEnemy.prototype.update = function() {
 
 };
 
+// -------------
 var EnemyUfo = function (index, game, playerHero) {
 
-    this.enemyType = "enemy1";
+    this.enemyType = "enemyUfo";
     this.health = 1;
     this.damagePoints = 1;
     this.enemySpeed = 100;
@@ -290,3 +342,18 @@ var EnemyUfo = function (index, game, playerHero) {
 
 EnemyUfo.prototype.constructor = EnemyUfo;
 EnemyUfo.prototype = Object.create(AlienEnemy.prototype);
+
+// ----------------
+var EnemyFrog = function (index, game, playerHero) {
+
+    this.enemyType = "enemy1";
+    this.health = 1;
+    this.damagePoints = 1;
+    this.enemySpeed = 100;
+    this.enemySpeedTime = 3000;
+    AlienEnemy.call(this, this.enemyType, index, game, playerHero);
+
+}
+
+EnemyFrog.prototype.constructor = EnemyFrog;
+EnemyFrog.prototype = Object.create(AlienEnemy.prototype);
