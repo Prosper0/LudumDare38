@@ -50,11 +50,6 @@ BasicGame.Game.prototype = {
         this.background.smoothed = false;
         //this.background.anchor.setTo(0.5, 0.5);
 
-        this.heroCannon = this.add.sprite(320, 470, 'heroWeaponCannon');
-        this.game.physics.enable(this.heroCannon, Phaser.Physics.ARCADE);
-        this.heroCannon.anchor.setTo(0.5, 0.5);
-        this.heroCannon.scale.setTo(2, 2);
-
         this.bullets = this.game.add.group();
         this.bullets.enableBody = true;
         this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -62,6 +57,11 @@ BasicGame.Game.prototype = {
         this.bullets.createMultiple(50, 'bullet');
         this.bullets.setAll('checkWorldBounds', true);
         this.bullets.setAll('outOfBoundsKill', true);
+
+        this.heroCannon = this.add.sprite(320, 470, 'heroWeaponCannon');
+        this.game.physics.enable(this.heroCannon, Phaser.Physics.ARCADE);
+        this.heroCannon.anchor.setTo(0.5, 0.5);
+        this.heroCannon.scale.setTo(2, 2);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
@@ -118,15 +118,24 @@ BasicGame.Game.prototype = {
         {
             this.nextFire = this.game.time.now + this.fireRate;
 
+            /*
             var bullet = this.bullets.getFirstDead();
-
-            bullet.reset(this.heroCannon.x - 10, this.heroCannon.y - 110);
+            var bulletOffset = 10 * Math.sin(this.game.math.degToRad(this.heroCannon.angle));
+            var newx = this.heroCannon.x + bulletOffset - 20;
+            this.game.debug.text('BulletOffset: ' + bulletOffset, 32, 60);
+            bullet.reset(newx, this.heroCannon.y + bulletOffset);
+            bullet.angle = this.heroCannon.angle;
+            */
+            var bullet = this.bullets.getFirstDead();
+            bullet.reset(this.heroCannon.x - 10, this.heroCannon.y);
+            bullet.angle = this.heroCannon.angle;
 
             //this.game.physics.arcade.moveToPointer(bullet, 300);
 
             //this.bullet.body.velocity.y = -300;
             //this.game.physics.arcade.velocityFromAngle(this.heroCannon.angle, 300, sprite.body.velocity);
             this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
+            //this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
             //bulletTime = game.time.now + 250;
         }
 
