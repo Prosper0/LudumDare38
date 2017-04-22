@@ -7,9 +7,14 @@ BasicGame.Game = function (game) {
     this.backgroundSky = null;
     this.backgroundGround = null;
     this.heroCannon = null;
+    this.hud = null;
+    this.heroLife = 0;
+    this.numbMoab = 0;
+    this.heroScore = 0;
 
     this.cursors = null;
     this.fireKey = null;
+    this.moabKey = null;
 
     this.bullets = null;
     this.fireRate = 100;
@@ -51,6 +56,9 @@ BasicGame.Game.prototype = {
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
+        this.heroLife = 7;
+        this.numbMoab = 3;
+
         //this.background = this.add.sprite(0, 0, 'gameBackground');
         this.backgroundSky = this.add.sprite(0, 0, 'gameBackgroundSky');
         this.backgroundGround = this.add.sprite(0, 0, 'gameBackgroundGround');
@@ -83,13 +91,21 @@ BasicGame.Game.prototype = {
         this.heroCannon.scale.setTo(3, 3);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
+        this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+        this.moabKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
+        this.moabKey.onDown.add(this.moab, this);
 
         //  Create some aliens
         this.enemies = [];
         this.enemiesSpawnTime = this.game.rnd.integerInRange(2500, 5000);
         this.lastSpawnTime = this.game.time.time;
         this.spawnEnemyAllowed = true;
+
+        this.hud = this.add.sprite(0, 700, 'heroHud');
+        this.game.physics.enable(this.hud, Phaser.Physics.ARCADE);
+        this.hud.scale.setTo(60, 30);
+        //this.hud.body.setSize(900, 100, 10, 10);
 
     },
 
@@ -107,7 +123,11 @@ BasicGame.Game.prototype = {
         if (this.fireKey.isDown)
         {
             this.fireBullet();
-        }
+        } 
+        /*else if (this.cursors.up.isDown) 
+        {
+            this.moab();
+        }*/
 
         if(this.spawnEnemyAllowed == true)
         {
@@ -131,6 +151,7 @@ BasicGame.Game.prototype = {
         for (var i = 0; i < this.enemies.length; i++)
         {
             this.game.physics.arcade.overlap(this.bullets, this.enemies[i].enemyBody, this.bulletHitEnemy, null, this);
+            this.game.physics.arcade.overlap(this.hud, this.enemies[i].enemyBody, this.enemyHitHero, null, this);
         }
 
         this.bullets.forEachAlive( this.killIfBulletIsOutOfWorld, this ); // function(box) {  if(box.y < 300) { box.kill(); }  }
@@ -150,7 +171,8 @@ BasicGame.Game.prototype = {
     render: function () {
 
         //this.game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
-        //this.game.debug.spriteInfo(this.heroCannon, 32, 400);
+        //this.game.debug.spriteInfo(this.hud, 32, 400);
+        //this.game.debug.body(this.hud);
 
     },
 
@@ -183,6 +205,27 @@ BasicGame.Game.prototype = {
             //this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
             //bulletTime = game.time.now + 250;
         }
+
+    },
+
+    moab: function () {
+
+        if(this.numbMoab > 0) 
+        {
+            this.numbMoab -= 1;
+            for (var i = 0; i < this.enemies.length; i++)
+            {
+                if(this.enemies[i].enemyBody.alive)
+                {
+                    this.heroScore += this.enemies[i].score;
+                    this.enemies[i].killEnemyByHeroKill();
+                }
+            }
+
+            this.enemies = [];
+        }
+
+        console.log("HeroScore:"+this.heroScore);
 
     },
 
@@ -241,6 +284,23 @@ BasicGame.Game.prototype = {
                 }
             }*/
         }
+
+    },
+
+    enemyHitHero: function (hudgfx, enemy) {
+
+        var enemyObj = this.enemies.filter(function ( obj ) {
+            return obj.name === enemy.name;
+        })[0];
+
+        console.log('Enemy killed:' + enemy.name + " x:" + enemy.x);
+        enemyObj.killEnemyByHeroKill();
+
+        this.game.camera.flash(0xff0000, 500);
+        this.heroLife -= 1;
+
+        if(this.heroLife <= 0)
+            this.quitGame();
 
     },
 
@@ -341,6 +401,21 @@ AlienEnemy.prototype.damage = function() {
 
 }
 
+AlienEnemy.prototype.killEnemyByHeroKill = function() {
+
+    this.health = 0;
+
+    if (this.health <= 0)
+    {
+        this.alive = false;
+        this.enemyBody.kill();
+        return true;
+    }
+
+    return false;
+
+}
+
 AlienEnemy.prototype.update = function() {
 
     if (this.game.physics.arcade.distanceBetween(this.enemyBody, this.playerHero) < 300)
@@ -358,6 +433,7 @@ var EnemyUfo = function (index, game, playerHero) {
     this.damagePoints = 1;
     this.enemySpeed = 100;
     this.enemySpeedTime = 3000;
+    this.score = 100;
     AlienEnemy.call(this, this.enemyType, index, game, playerHero);
 
 }
@@ -373,6 +449,7 @@ var EnemyFrog = function (index, game, playerHero) {
     this.damagePoints = 1;
     this.enemySpeed = 100;
     this.enemySpeedTime = 3000;
+    this.score = 50;
     AlienEnemy.call(this, this.enemyType, index, game, playerHero);
 
 }
