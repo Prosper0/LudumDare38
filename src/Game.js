@@ -21,6 +21,7 @@ BasicGame.Game = function (game) {
     this.spawnEnemyAllowed = false;
     this.enemiesSpawnTime = 0;
     this.lastSpawnTime = 0;
+    this.emitter = null;
 
     this.game;      //  a reference to the currently running game (Phaser.Game)
     this.add;       //  used to add sprites, text, groups, etc (Phaser.GameObjectFactory)
@@ -96,11 +97,11 @@ BasicGame.Game.prototype = {
 
         if (this.cursors.left.isDown)
         {
-            this.heroCannon.angle -= 1;
+            this.heroCannon.angle -= 2;
         }
         else if (this.cursors.right.isDown)
         {
-            this.heroCannon.angle += 1;
+            this.heroCannon.angle += 2;
         }
 
         if (this.fireKey.isDown)
@@ -222,7 +223,13 @@ BasicGame.Game.prototype = {
 
         if (destroyed)
         {
-            console.log('Enemy dead:' + enemy.name);
+            console.log('Enemy dead:' + enemy.name + " x:" + enemy.x);
+            this.emitter = this.game.add.emitter(enemy.x, enemy.y, 200);
+            this.emitter.makeParticles('deadlyparticle');//, 0, 250, false, false);
+            //this.emitter.gravity = 200;
+            //this.emitter.bounce.setTo(0.5, 0.5);
+            this.emitter.start(true, 4000, null, 10);
+            //this.particleBurst(enemy.x, enemy.y);
             //var explosionAnimation = explosions.getFirstExists(false);
             //explosionAnimation.reset(tank.x, tank.y);
             //explosionAnimation.play('kaboom', 30, false, true);
@@ -243,7 +250,6 @@ BasicGame.Game.prototype = {
         var distanceToCannon = this.game.height - bullet.y;
         var offs = Math.abs(20 * Math.sin(this.game.math.degToRad(this.heroCannon.angle)));
         offs = offs * 5;
-        console.log("Offset:"+offs);
         var dist2 = Phaser.Math.distance(this.heroCannon.x , this.heroCannon.y , bullet.x , bullet.y);
         //if (this.game.physics.arcade.distanceBetween(bullet, this.heroCannon) > 450)
         if(offs > 10 && offs < 64)
@@ -253,6 +259,22 @@ BasicGame.Game.prototype = {
         { 
             bullet.kill(); 
         }
+
+    },
+
+    particleBurst: function (pointerx, pointery) {
+
+        this.emitter.x = pointerx;
+        this.emitter.y = pointery;
+
+        this.emitter.start(true, 4000, null, 10);
+
+        this.game.time.events.add(2000, this.destroyEmitter, this);
+    },
+
+    destroyEmitter: function() {
+
+        //emitter.destroy();
 
     }
 
