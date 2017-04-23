@@ -323,13 +323,10 @@ BasicGame.Game.prototype = {
 
             var bullet = this.bullets.getFirstDead();
             bullet.scale.setTo(3, 3);
-<<<<<<< HEAD
             bullet.smoothed = false;
-            bullet.reset(this.heroCannon.x - 10, this.heroCannon.y);
-=======
+
             //bullet.reset(this.heroCannon.x - 15, this.heroCannon.y - 160);
             bullet.reset(newXpos - 20, newYpos);
->>>>>>> dbf407b0a1b861abd00231a4506d2c9a9bc5651a
             bullet.angle = this.heroCannon.angle;
 
             this.add.tween(bullet.scale).to({ x: 0.2, y: 0.2 }, 1000, Phaser.Easing.Quadratic.Out, true, 100);
