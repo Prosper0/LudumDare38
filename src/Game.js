@@ -454,6 +454,7 @@ var HudScore = function HudScore(game, x, y) {
 
     for(ix = 0; ix < 10; ++ix) {
         var boomScore0 = this.game.add.sprite(x - (ix * 14), y, 'heroHudNumbers');
+        boomScore0.smoothed = false;
         boomScore0.scale.setTo(3, 3);
         boomScore0.frame = 0;
         this.hudScore.push(boomScore0);
@@ -474,7 +475,7 @@ HudScore.prototype.updateScore = function(newScore) {
     console.log("Update score:"+newScore);
     
     var scores = "12345".split("").reverse().join("");
-    var scores2 = "12345".split("").reverse();
+    var scores2 = newScore.toString().split("").reverse();
 
     /*for(u = 1; u < scores.length; ++u) {
         this.hudScore[u-1].frame = parseInt(scores.charAt(u));
