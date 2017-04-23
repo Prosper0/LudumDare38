@@ -48,6 +48,7 @@ BasicGame.Preloader.prototype = {
 		this.game.load.audio('explosion02snd', 'assets/audio/explosion02.wav');
 		this.game.load.audio('hit01snd', 'assets/audio/hit01.wav');
 		this.game.load.audio('shoot01snd', 'assets/audio/shoot01.wav');
+		this.game.load.audio('gameOver1snd', 'assets/audio/gameover-man.wav');
 		//this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
 		//this.load.image('gameBackground', 'assets/image/background01.png');
 		this.load.image('gameBackgroundSky', 'assets/image/background-sky.png');

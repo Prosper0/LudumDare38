@@ -11,6 +11,7 @@ BasicGame.Game = function (game) {
     this.sndAlien1 = null;
     this.sndHit1 = null;
     this.sndShoot1 = null;
+    this.sndGameOver = null;
 
     //this.background = null;
     this.backgroundSky = null;
@@ -34,7 +35,7 @@ BasicGame.Game = function (game) {
     this.moabKey = null;
 
     this.bullets = null;
-    this.fireRate = 100;
+    this.fireRate = 500;
     this.nextFire = 0;
 
     this.enemies = null;
@@ -82,6 +83,7 @@ BasicGame.Game.prototype = {
         this.sndAlien1 = this.add.audio('alien01snd');
         this.sndHit1 = this.add.audio('hit01snd');
         this.sndShoot1 = this.add.audio('shoot01snd');
+        this.sndGameOver = this.add.audio('gameOver1snd');
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -238,6 +240,10 @@ BasicGame.Game.prototype = {
         this.backgroundGO.visible = true;
         this.game.world.bringToTop(this.backgroundGO);
         this.game.camera.flash(0xff0000, 1000);
+        this.music.volume = 0.4;
+        this.sndAlien1.mute = true;
+        this.sndAlien1.stop();
+        this.sndGameOver.play();
         //this.state.start('MainMenu');
 
     },
