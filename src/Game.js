@@ -123,10 +123,12 @@ BasicGame.Game.prototype = {
         this.bullets.setAll('checkWorldBounds', true);
         this.bullets.setAll('outOfBoundsKill', true);
 
-        this.heroCannon = this.add.sprite(480, 720, 'heroWeaponCannon');
+        this.heroCannon = this.add.sprite(480, 720, 'heroWeaponCannonAnim');
         this.game.physics.enable(this.heroCannon, Phaser.Physics.ARCADE);
         this.heroCannon.anchor.setTo(0.5, 0.5);
         this.heroCannon.scale.setTo(3, 3);
+        this.heroCannon.animations.add('fire');
+        this.heroCannon.frame = 3;
 
         // Keyboard
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -310,6 +312,7 @@ BasicGame.Game.prototype = {
             //this.game.physics.arcade.velocityFromAngle(this.heroCannon.angle, 300, sprite.body.velocity);
             this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
             this.sndShoot1.play();
+            this.heroCannon.animations.play('fire', 20, false);
             //this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
             //bulletTime = game.time.now + 250;
         }
