@@ -364,7 +364,7 @@ BasicGame.Game.prototype = {
         this.enemies.push(new EnemyUfo(this.enemiesTotal, this.game, this.heroCannon));
         this.enemiesTotal = this.enemiesTotal + 1;
         //this.enemies.push(new AlienEnemy("enemy1", this.enemiesTotal, this.game, this.heroCannon));
-        this.enemies.push(new EnemyFrog(this.enemiesTotal, this.game, this.heroCannon));
+        this.enemies.push(new EnemySkull(this.enemiesTotal, this.game, this.heroCannon));
 
     },
 
@@ -635,6 +635,22 @@ var EnemyUfo = function (index, game, playerHero) {
 
 EnemyUfo.prototype.constructor = EnemyUfo;
 EnemyUfo.prototype = Object.create(AlienEnemy.prototype);
+
+// -------------
+var EnemySkull = function (index, game, playerHero) {
+
+    this.enemyType = "enemySkull";
+    this.health = 1;
+    this.damagePoints = 1;
+    this.enemySpeed = 100;
+    this.enemySpeedTime = 3000;
+    this.score = 100;
+    AlienEnemy.call(this, this.enemyType, index, game, playerHero);
+
+}
+
+EnemySkull.prototype.constructor = EnemySkull;
+EnemySkull.prototype = Object.create(AlienEnemy.prototype);
 
 // ----------------
 var EnemyFrog = function (index, game, playerHero) {
