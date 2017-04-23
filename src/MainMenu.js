@@ -46,9 +46,9 @@ BasicGame.MainMenu.prototype = {
 		this.helpButton.scale.setTo(3, 3);
 		this.helpButton.angle = -10;
 
-		this.soundButton = this.add.button(930, 690, 'soundButton', this.toggleMute, this, 1, 0, 2);
-		this.helpButton.smoothed = false;
-		this.helpButton.scale.setTo(3, 3);
+		this.soundButton = this.add.button(870, 630, 'soundButton', this.toggleMute, this, 1, 0, 2);
+		this.soundButton.smoothed = false;
+		this.soundButton.scale.setTo(3, 3);
 
 		if (allMusicIsMuted) {
 			this.soundButton.tint = 16711680;
