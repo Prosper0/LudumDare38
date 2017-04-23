@@ -34,7 +34,7 @@ BasicGame.Game = function (game) {
     this.moabKey = null;
 
     this.bullets = null;
-    this.fireRate = 100;
+    this.fireRate = 500;
     this.nextFire = 0;
 
     this.enemies = null;
