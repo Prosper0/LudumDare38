@@ -15,6 +15,10 @@ BasicGame.Game = function (game) {
     //this.background = null;
     this.backgroundSky = null;
     this.backgroundGround = null;
+    this.backMist = null;
+    this.frontMist = null;
+    this.backMistAngle = 0.0;
+    this.frontMistAngle = 0.0;
     this.backgroundGO = null;
     this.heroCannon = null;
     this.hud = null;
@@ -88,12 +92,18 @@ BasicGame.Game.prototype = {
         //this.background = this.add.sprite(0, 0, 'gameBackground');
         this.backgroundSky = this.add.sprite(0, 0, 'gameBackgroundSky');
         this.backgroundGround = this.add.sprite(0, 0, 'gameBackgroundGround');
+        this.backMist = this.add.sprite(180 * 3, 465 * 3, 'gameMistOfWarBack');
+        this.frontMist = this.add.sprite(180 * 3, 465 * 3, 'gameMistOfWarFront');
+        this.backMist.anchor.setTo(0.5, 0.5);
+        this.frontMist.anchor.setTo(0.5, 0.5);
         this.backgroundSky.x = 0;
         this.backgroundSky.y = 0;
         this.backgroundGround.x = 0;
         this.backgroundGround.y = 0;
         this.backgroundSky.scale.setTo(3, 3);
         this.backgroundGround.scale.setTo(3, 3);
+        this.backMist.scale.setTo(3, 3);
+        this.frontMist.scale.setTo(3, 3);
         this.game.physics.enable(this.backgroundSky, Phaser.Physics.ARCADE);
         this.game.physics.enable(this.backgroundGround, Phaser.Physics.ARCADE);
         this.backgroundSky.body.immovable = true;
@@ -126,9 +136,9 @@ BasicGame.Game.prototype = {
         //this.game.input.keyboard.onDownCallback = this.quitAfterKeyPress;
 
         //this.game.input.onDown.add(this.quitAfterKeyPress;
-        
-        /*function(e) {   
-            
+
+        /*function(e) {
+
             console.log("Key:"+e.keyCode+" IntState:"+this.internalGameState);
 
             if(this.internalGameState === 'dead') {
@@ -137,7 +147,7 @@ BasicGame.Game.prototype = {
             } else {
                 console.log("You aint dead!");
             }
-            
+
         };*/
 
         //  Create some aliens
@@ -182,8 +192,8 @@ BasicGame.Game.prototype = {
         {
             this.quitAfterKeyPress();
             this.fireBullet();
-        } 
-        /*else if (this.cursors.up.isDown) 
+        }
+        /*else if (this.cursors.up.isDown)
         {
             this.moab();
         }*/
@@ -215,6 +225,8 @@ BasicGame.Game.prototype = {
 
         this.bullets.forEachAlive( this.killIfBulletIsOutOfWorld, this ); // function(box) {  if(box.y < 300) { box.kill(); }  }
 
+        this.frontMist.angle += 0.1;
+        this.backMist.angle += 0.03;
     },
 
     quitGame: function (pointer) {
@@ -300,7 +312,7 @@ BasicGame.Game.prototype = {
 
     moab: function () {
 
-        if(this.numbMoab > 0) 
+        if(this.numbMoab > 0)
         {
             this.numbMoab -= 1;
             this.game.camera.flash(0x0000ff, 500);
@@ -425,8 +437,8 @@ BasicGame.Game.prototype = {
             offs = 10;
 
         if(dist2 > (430 + offs))
-        { 
-            bullet.kill(); 
+        {
+            bullet.kill();
         }
 
     },
@@ -500,7 +512,7 @@ var HudScore = function HudScore(game, x, y) {
 HudScore.prototype.updateScore = function(newScore) {
 
     //console.log("Update score:"+newScore);
-    
+
     //var scores = "12345".split("").reverse().join("");
     var scores2 = newScore.toString().split("").reverse();
 
@@ -514,7 +526,7 @@ HudScore.prototype.updateScore = function(newScore) {
 
 };
 
-var AlienEnemy = function AlienEnemy(enemyType, enemyId, game, playerHero) { //enemyType, 
+var AlienEnemy = function AlienEnemy(enemyType, enemyId, game, playerHero) { //enemyType,
 
     this.game = game;
     this.playerHero = playerHero;
@@ -554,7 +566,7 @@ var AlienEnemy = function AlienEnemy(enemyType, enemyId, game, playerHero) { //e
     //this.enemyBody.body.acceleration.x = -1000;
 
     this.game.add.tween(this.enemyBody.scale).to({ x: 2.5, y: 2.5 }, this.enemySpeedTime, Phaser.Easing.Quadratic.Out, true, this.enemySpeed);
-    
+
     this.enemyBody.name = this.enemyType + enemyId.toString();
     this.name = this.enemyType + enemyId.toString();
 
