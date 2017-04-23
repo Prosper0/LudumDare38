@@ -11,6 +11,8 @@ BasicGame.Game = function (game) {
     this.backgroundGO = null;
     this.heroCannon = null;
     this.hud = null;
+    this.hudHealth = null;
+    this.hudHealthMoabObj = null;
     this.heroLife = 0;
     this.numbMoab = 0;
     this.heroScore = 0;
@@ -60,7 +62,7 @@ BasicGame.Game.prototype = {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.internalGameState = 'play';
-        this.heroLife = 1;
+        this.heroLife = 7;
         this.numbMoab = 3;
 
         //this.background = this.add.sprite(0, 0, 'gameBackground');
@@ -82,9 +84,9 @@ BasicGame.Game.prototype = {
         //this.background.anchor.setTo(0.5, 0.5);
 
         this.bullets = this.game.add.group();
+
         this.bullets.enableBody = true;
         this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-
         this.bullets.createMultiple(50, 'bullet');
         this.bullets.setAll('checkWorldBounds', true);
         this.bullets.setAll('outOfBoundsKill', true);
@@ -124,10 +126,15 @@ BasicGame.Game.prototype = {
         this.lastSpawnTime = this.game.time.time;
         this.spawnEnemyAllowed = true;
 
-        this.hud = this.add.sprite(0, 700, 'heroHud');
+        this.hud = this.add.sprite(0, 640, 'heroHud');
         this.game.physics.enable(this.hud, Phaser.Physics.ARCADE);
-        this.hud.scale.setTo(60, 30);
+        this.hud.scale.setTo(3, 3);
         //this.hud.body.setSize(900, 100, 10, 10);
+
+        this.hudHealth = this.add.sprite(72, 681, 'heroHudHealth', 0);
+        this.hudHealth.scale.setTo(3, 3);
+
+        this.hudHealthMoabObj = new HudMoab(this.game, 96, 630, this.numbMoab);
 
         this.backgroundGO = this.add.sprite(0, 0, 'gameBackgroundGameOver');
         this.backgroundGO.x = 0;
@@ -225,6 +232,7 @@ BasicGame.Game.prototype = {
         //this.game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
         //this.game.debug.spriteInfo(this.hud, 32, 400);
         //this.game.debug.body(this.hud);
+        this.game.debug.text('Hud.z: ' + this.hud.z, 32, 20);
         this.game.debug.text('HeroScore: ' + this.heroScore, 32, 32);
         this.game.debug.text('Moabs: ' + this.numbMoab, 32, 50);
         this.game.debug.text('Enemy cnt: ' + this.enemies.length, 32, 60);
@@ -270,6 +278,7 @@ BasicGame.Game.prototype = {
         {
             this.numbMoab -= 1;
             this.game.camera.flash(0x0000ff, 500);
+            this.hudHealthMoabObj.use(this.numbMoab);
             for (var i = 0; i < this.enemies.length; i++)
             {
                 if(this.enemies[i].enemyBody.alive)
@@ -355,9 +364,19 @@ BasicGame.Game.prototype = {
 
         this.game.camera.flash(0xff0000, 500);
         this.heroLife -= 1;
+        this.updateHealthBar();
 
         if(this.heroLife <= 0)
             this.quitGame();
+
+    },
+
+    updateHealthBar: function () {
+
+        var idx = 7 - this.heroLife;
+        this.hudHealth.frame = idx;
+        /*this.hudHealth = this.add.sprite(72, 681, 'heroHudHealth', 0);
+        this.hudHealth.scale.setTo(3, 3);*/
 
     },
 
@@ -394,6 +413,29 @@ BasicGame.Game.prototype = {
         //emitter.destroy();
 
     }
+
+};
+
+var HudMoab = function HudMoab(game, x, y, numbMoab) {
+
+    this.game = game;
+    this.numbMoab = numbMoab;
+
+    this.hudMoab = [];
+
+    for(ix = 0; ix < this.numbMoab; ++ix) {
+        var newX = x + (ix * 36);
+        var boom = this.game.add.sprite(newX, y, 'heroHudMoab');
+        boom.scale.setTo(3, 3);
+        this.hudMoab.push(boom);
+    }
+
+};
+
+HudMoab.prototype.use = function(moabsLeft) {
+
+    var idxToRemove = this.numbMoab - moabsLeft - 1;
+    this.hudMoab[idxToRemove].visible = false;
 
 };
 

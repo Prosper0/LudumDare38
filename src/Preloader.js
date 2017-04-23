@@ -46,7 +46,10 @@ BasicGame.Preloader.prototype = {
 		this.load.image('enemy1', 'assets/image/enemy01.png');
 		this.load.spritesheet('enemyUfo', "assets/image/flying-saucer.png", 64, 64);
 		this.load.image('deadlyparticle', 'assets/image/ghostparticle.png');
-		this.load.image('heroHud', 'assets/image/ghostparticle.png');
+
+		this.load.image('heroHud', 'assets/image/hud.png');
+		this.load.spritesheet('heroHudHealth', "assets/image/health-bar2.png", 64, 9, 7);
+		this.load.image('heroHudMoab', 'assets/image/bomb.png');
 
 	},
 
