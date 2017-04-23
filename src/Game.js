@@ -224,6 +224,15 @@ BasicGame.Game.prototype = {
             var current_time = this.game.time.time;
             if(current_time - this.lastSpawnTime > this.enemiesSpawnTime){
                 this.enemiesSpawnTime = this.game.rnd.integerInRange(2500, 5000);
+
+                if(this.heroScore > 1000 && this.heroScore < 2000) {
+                    this.enemiesSpawnTime = this.game.rnd.integerInRange(2000, 4000);
+                } else if(this.heroScore > 3000 && this.heroScore < 4000) {
+                    this.enemiesSpawnTime = this.game.rnd.integerInRange(1000, 2500);
+                } else if(this.heroScore >= 4000) {
+                    this.enemiesSpawnTime = this.game.rnd.integerInRange(500, 1500);
+                }
+
                 this.lastSpawnTime = current_time;
                 this.createEnemy();
             }
@@ -669,9 +678,9 @@ var EnemySkull = function (index, game, playerHero) {
     this.enemyType = "enemySkull";
     this.health = 1;
     this.damagePoints = 1;
-    this.enemySpeed = 100;
-    this.enemySpeedTime = 3000;
-    this.score = 100;
+    this.enemySpeed = 200;
+    this.enemySpeedTime = 2000;
+    this.score = 150;
     AlienEnemy.call(this, this.enemyType, index, game, playerHero);
 
 }
