@@ -21,7 +21,8 @@ BasicGame.Preloader.prototype = {
         this.background.width = this.game.width;
         this.background.smoothed = false;
 
-		this.preloadBar = this.add.sprite(300, 200, 'preloaderBar');
+		this.preloadBar = this.add.sprite(400, 630, 'preloaderBar');
+		this.preloadBar.scale.setTo(3, 3);
 
 		//	This sets the preloadBar sprite as a loader sprite.
 		//	What that does is automatically crop the sprite from 0 to full-width
@@ -32,6 +33,9 @@ BasicGame.Preloader.prototype = {
 		//	As this is just a Project Template I've not provided these assets, swap them for your own.
 		this.load.image('titlepage', 'assets/image/menu-screen.png');
 		this.load.image('playButton', 'assets/image/play_button.png');
+		this.load.spritesheet('startButton', 'assets/image/start.png', 75, 27);
+		this.load.image('startButtonInactive', 'assets/image/start-inactive.png');
+		this.load.image('startButtonActive', 'assets/image/start-active.png');
 		//this.load.atlas('playButton', 'assets/image/play_button.png', 'assets/images/play_button.json');
 		this.load.audio('titleMusic', ['assets/audio/main_menu.mp3']);
 		//this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');

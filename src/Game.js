@@ -472,9 +472,9 @@ var HudScore = function HudScore(game, x, y) {
 
 HudScore.prototype.updateScore = function(newScore) {
 
-    console.log("Update score:"+newScore);
+    //console.log("Update score:"+newScore);
     
-    var scores = "12345".split("").reverse().join("");
+    //var scores = "12345".split("").reverse().join("");
     var scores2 = newScore.toString().split("").reverse();
 
     /*for(u = 1; u < scores.length; ++u) {
