@@ -97,9 +97,9 @@ BasicGame.Game.prototype = {
         this.backgroundSky.smoothed = false;
         this.backgroundGround = this.add.sprite(0, 0, 'gameBackgroundGround');
         this.backgroundGround.smoothed = false;
-        this.backMist = this.add.sprite(180 * 3, 465 * 3, 'gameMistOfWarBack');
+        this.backMist = this.add.sprite(170 * 3, 465 * 3, 'gameMistOfWarBack');
         this.backMist.smoothed = false;
-        this.frontMist = this.add.sprite(180 * 3, 465 * 3, 'gameMistOfWarFront');
+        this.frontMist = this.add.sprite(170 * 3, 465 * 3, 'gameMistOfWarFront');
         this.frontMist.smoothed = false;
         this.backMist.anchor.setTo(0.5, 0.5);
         this.frontMist.anchor.setTo(0.5, 0.5);

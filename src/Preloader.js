@@ -54,8 +54,8 @@ BasicGame.Preloader.prototype = {
 		this.load.image('gameBackgroundSky', 'assets/image/background-sky.png');
 		this.load.image('gameBackgroundGround', 'assets/image/background-ground.png');
 		this.load.image('gameBackgroundGameOver', 'assets/image/gameover-screen.png');
-		this.load.image('gameMistOfWarBack', 'assets/image/back-mist.png');
-		this.load.image('gameMistOfWarFront', 'assets/image/front-mist.png');
+		this.load.image('gameMistOfWarBack', 'assets/image/back-mist02.png');
+		this.load.image('gameMistOfWarFront', 'assets/image/front-mist02.png');
 
 		this.load.image('heroWeaponCannon', 'assets/image/cannon-tower.png');
 		this.load.spritesheet('heroWeaponCannonAnim', "assets/image/cannon-fire.png", 32, 128);
