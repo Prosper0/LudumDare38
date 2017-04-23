@@ -90,6 +90,7 @@ BasicGame.Game.prototype = {
         this.internalGameState = 'play';
         this.heroLife = 7;
         this.numbMoab = 3;
+        this.heroScore = 0;
 
         //this.background = this.add.sprite(0, 0, 'gameBackground');
         this.backgroundSky = this.add.sprite(0, 0, 'gameBackgroundSky');
