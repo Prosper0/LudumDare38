@@ -43,6 +43,11 @@ BasicGame.Preloader.prototype = {
 		//this.load.atlas('playButton', 'assets/image/play_button.png', 'assets/images/play_button.json');
 		this.load.audio('titleMusic', ['assets/audio/Attack-of-the-Planetary-Vampires.mp3']);
 		this.load.audio('gameMusic', ['assets/audio/Planetary-Invation-Initiated.mp3']);
+		this.game.load.audio('alien01snd', 'assets/audio/alien01.wav');
+		this.game.load.audio('explosion01snd', 'assets/audio/explosion01.wav');
+		this.game.load.audio('explosion02snd', 'assets/audio/explosion02.wav');
+		this.game.load.audio('hit01snd', 'assets/audio/hit01.wav');
+		this.game.load.audio('shoot01snd', 'assets/audio/shoot01.wav');
 		//this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
 		//this.load.image('gameBackground', 'assets/image/background01.png');
 		this.load.image('gameBackgroundSky', 'assets/image/background-sky.png');

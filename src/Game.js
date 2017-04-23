@@ -6,6 +6,12 @@ BasicGame.Game = function (game) {
     this.internalGameState = null;
     this.music = null;
 
+    this.sndExplosion1 = null;
+    this.sndExplosion2 = null;
+    this.sndAlien1 = null;
+    this.sndHit1 = null;
+    this.sndShoot1 = null;
+
     //this.background = null;
     this.backgroundSky = null;
     this.backgroundGround = null;
@@ -70,6 +76,12 @@ BasicGame.Game.prototype = {
 
         if(!allMusicIsMuted)
 		    this.music.play();
+
+        this.sndExplosion1 = this.add.audio('explosion01snd');
+        this.sndExplosion2 = this.add.audio('explosion02snd');
+        this.sndAlien1 = this.add.audio('alien01snd');
+        this.sndHit1 = this.add.audio('hit01snd');
+        this.sndShoot1 = this.add.audio('shoot01snd');
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -288,6 +300,7 @@ BasicGame.Game.prototype = {
             //this.bullet.body.velocity.y = -300;
             //this.game.physics.arcade.velocityFromAngle(this.heroCannon.angle, 300, sprite.body.velocity);
             this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
+            this.sndShoot1.play();
             //this.game.physics.arcade.velocityFromRotation(this.heroCannon.rotation - Math.PI/2, 400, bullet.body.velocity);
             //bulletTime = game.time.now + 250;
         }
@@ -301,6 +314,7 @@ BasicGame.Game.prototype = {
             this.numbMoab -= 1;
             this.game.camera.flash(0x0000ff, 500);
             this.hudHealthMoabObj.use(this.numbMoab);
+            this.sndExplosion2.play();
             for (var i = 0; i < this.enemies.length; i++)
             {
                 if(this.enemies[i].enemyBody.alive)
@@ -364,6 +378,7 @@ BasicGame.Game.prototype = {
             //this.emitter.gravity = 200;
             //this.emitter.bounce.setTo(0.5, 0.5);
             this.emitter.start(true, 4000, null, 10);
+            this.sndExplosion1.play();
             //this.particleBurst(enemy.x, enemy.y);
             //var explosionAnimation = explosions.getFirstExists(false);
             //explosionAnimation.reset(tank.x, tank.y);
@@ -391,6 +406,7 @@ BasicGame.Game.prototype = {
         this.game.camera.flash(0xff0000, 500);
         this.heroLife -= 1;
         this.updateHealthBar();
+        this.sndAlien1.play();
 
         if(this.heroLife <= 0)
             this.quitGame();
