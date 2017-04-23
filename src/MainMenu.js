@@ -5,6 +5,7 @@ BasicGame.MainMenu = function (game) {
 	this.music = null;
 	this.playButton = null;
 	this.startButton = null;
+	this.helpButton = null;
 
 };
 
@@ -27,9 +28,15 @@ BasicGame.MainMenu.prototype = {
         this.background.smoothed = false;
 
 		this.startButton = this.add.button(600, 450, 'startButton', this.startGame, this, 1, 0, 1);
+		this.startButton.smoothed = false;
 		this.startButton.scale.setTo(3, 3);
 		this.startButton.angle = -10;
 		//this.playButton = this.add.button(600, 400, 'playButton', this.startGame, this);
+
+		this.helpButton = this.add.button(600, 550, 'helpButton', this.helpMenu, this, 1, 0, 1);
+		this.helpButton.smoothed = false;
+		this.helpButton.scale.setTo(3, 3);
+		this.helpButton.angle = -10;
 
 	},
 
@@ -46,6 +53,12 @@ BasicGame.MainMenu.prototype = {
 
 		//	And start the actual game
 		this.state.start('Game');
+
+	},
+
+	helpMenu: function (pointer) {
+
+		this.state.start('HelpMenu');
 
 	}
 

@@ -4,6 +4,7 @@ BasicGame.Game = function (game) {
     //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
 
     this.internalGameState = null;
+    this.music = null;
 
     //this.background = null;
     this.backgroundSky = null;
@@ -59,6 +60,9 @@ BasicGame.Game = function (game) {
 BasicGame.Game.prototype = {
 
     create: function () {
+
+        this.music = this.add.audio('gameMusic');
+		this.music.play();
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -215,6 +219,7 @@ BasicGame.Game.prototype = {
 
         if(this.internalGameState === 'dead') {
             //console.log("YOU DEAD, going to main menu");
+            this.music.stop();
             this.state.start('MainMenu');
         } else {
             //console.log("You aint dead!");
@@ -234,11 +239,11 @@ BasicGame.Game.prototype = {
         //this.game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
         //this.game.debug.spriteInfo(this.hud, 32, 400);
         //this.game.debug.body(this.hud);
-        this.game.debug.text('Hud.z: ' + this.hud.z, 32, 20);
+        /*this.game.debug.text('Hud.z: ' + this.hud.z, 32, 20);
         this.game.debug.text('HeroScore: ' + this.heroScore, 32, 32);
         this.game.debug.text('Moabs: ' + this.numbMoab, 32, 50);
         this.game.debug.text('Enemy cnt: ' + this.enemies.length, 32, 60);
-        this.game.debug.text('Life: ' + this.heroLife, 32, 70);
+        this.game.debug.text('Life: ' + this.heroLife, 32, 70);*/
 
     },
 

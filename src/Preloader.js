@@ -33,11 +33,15 @@ BasicGame.Preloader.prototype = {
 		//	As this is just a Project Template I've not provided these assets, swap them for your own.
 		this.load.image('titlepage', 'assets/image/menu-screen.png');
 		this.load.image('playButton', 'assets/image/play_button.png');
-		this.load.spritesheet('startButton', 'assets/image/start.png', 75, 27);
-		this.load.image('startButtonInactive', 'assets/image/start-inactive.png');
-		this.load.image('startButtonActive', 'assets/image/start-active.png');
+		this.load.spritesheet('startButton', 'assets/image/start.png', 75, 26);
+		this.load.spritesheet('helpButton', 'assets/image/help.png', 62, 29);
+		this.load.spritesheet('backButton', 'assets/image/back.png', 39, 9);
+		this.load.image('helppage', 'assets/image/help-screen.png');
+		//this.load.image('startButtonInactive', 'assets/image/start-inactive.png');
+		//this.load.image('startButtonActive', 'assets/image/start-active.png');
 		//this.load.atlas('playButton', 'assets/image/play_button.png', 'assets/images/play_button.json');
-		this.load.audio('titleMusic', ['assets/audio/main_menu.mp3']);
+		this.load.audio('titleMusic', ['assets/audio/Attack-of-the-Planetary-Vampires.mp3']);
+		this.load.audio('gameMusic', ['assets/audio/Planetary-Invation-Initiated.mp3']);
 		//this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
 		//this.load.image('gameBackground', 'assets/image/background01.png');
 		this.load.image('gameBackgroundSky', 'assets/image/background-sky.png');
