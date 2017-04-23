@@ -9,6 +9,10 @@ BasicGame.Game = function (game) {
     //this.background = null;
     this.backgroundSky = null;
     this.backgroundGround = null;
+    this.backMist = null;
+    this.frontMist = null;
+    this.backMistAngle = 0.0;
+    this.frontMistAngle = 0.0;
     this.backgroundGO = null;
     this.heroCannon = null;
     this.hud = null;
@@ -76,14 +80,18 @@ BasicGame.Game.prototype = {
         //this.background = this.add.sprite(0, 0, 'gameBackground');
         this.backgroundSky = this.add.sprite(0, 0, 'gameBackgroundSky');
         this.backgroundGround = this.add.sprite(0, 0, 'gameBackgroundGround');
-        this.backMist = this.add.sprite(-285, 0, 'gameMistOfWarBack');
-        this.frontMist = this.add.sprite(-285, 0, 'gameMistOfWarFront');
+        this.backMist = this.add.sprite(180 * 3, 465 * 3, 'gameMistOfWarBack');
+        this.frontMist = this.add.sprite(180 * 3, 465 * 3, 'gameMistOfWarFront');
+        this.backMist.anchor.setTo(0.5, 0.5);
+        this.frontMist.anchor.setTo(0.5, 0.5);
         this.backgroundSky.x = 0;
         this.backgroundSky.y = 0;
         this.backgroundGround.x = 0;
         this.backgroundGround.y = 0;
         this.backgroundSky.scale.setTo(3, 3);
         this.backgroundGround.scale.setTo(3, 3);
+        this.backMist.scale.setTo(3, 3);
+        this.frontMist.scale.setTo(3, 3);
         this.game.physics.enable(this.backgroundSky, Phaser.Physics.ARCADE);
         this.game.physics.enable(this.backgroundGround, Phaser.Physics.ARCADE);
         this.backgroundSky.body.immovable = true;
@@ -203,6 +211,8 @@ BasicGame.Game.prototype = {
 
         this.bullets.forEachAlive( this.killIfBulletIsOutOfWorld, this ); // function(box) {  if(box.y < 300) { box.kill(); }  }
 
+        this.frontMist.angle += 0.1;
+        this.backMist.angle += 0.03;
     },
 
     quitGame: function (pointer) {
