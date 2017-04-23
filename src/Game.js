@@ -128,7 +128,7 @@ BasicGame.Game.prototype = {
         this.heroCannon.anchor.setTo(0.5, 0.5);
         this.heroCannon.scale.setTo(3, 3);
         this.heroCannon.animations.add('fire');
-        this.heroCannon.frame = 3;
+        this.heroCannon.frame = 4;
 
         // Keyboard
         this.cursors = this.game.input.keyboard.createCursorKeys();
