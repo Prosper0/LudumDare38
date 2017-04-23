@@ -16,6 +16,7 @@ BasicGame.Game = function (game) {
     this.heroLife = 0;
     this.numbMoab = 0;
     this.heroScore = 0;
+    this.hudScoreObj = null;
 
     this.cursors = null;
     this.fireKey = null;
@@ -131,10 +132,11 @@ BasicGame.Game.prototype = {
         this.hud.scale.setTo(3, 3);
         //this.hud.body.setSize(900, 100, 10, 10);
 
-        this.hudHealth = this.add.sprite(72, 681, 'heroHudHealth', 0);
+        this.hudHealth = this.add.sprite(74, 683, 'heroHudHealth', 0);
         this.hudHealth.scale.setTo(3, 3);
 
         this.hudHealthMoabObj = new HudMoab(this.game, 96, 630, this.numbMoab);
+        this.hudScoreObj = new HudScore(this.game, 860, 685);
 
         this.backgroundGO = this.add.sprite(0, 0, 'gameBackgroundGameOver');
         this.backgroundGO.x = 0;
@@ -209,13 +211,13 @@ BasicGame.Game.prototype = {
 
     quitAfterKeyPress: function () {
 
-        console.log("IntState:"+this.internalGameState);
+        //console.log("IntState:"+this.internalGameState);
 
         if(this.internalGameState === 'dead') {
-            console.log("YOU DEAD, going to main menu");
+            //console.log("YOU DEAD, going to main menu");
             this.state.start('MainMenu');
         } else {
-            console.log("You aint dead!");
+            //console.log("You aint dead!");
         }
 
     },
@@ -285,6 +287,8 @@ BasicGame.Game.prototype = {
                 {
                     this.heroScore += this.enemies[i].score;
                     this.enemies[i].killEnemyByHeroKill();
+
+                    this.hudScoreObj.updateScore(this.heroScore);
                 }
             }
 
@@ -332,6 +336,8 @@ BasicGame.Game.prototype = {
 
         if (destroyed)
         {
+            this.heroScore += enemyObj.score;
+            this.hudScoreObj.updateScore(this.heroScore);
             //console.log('Enemy dead:' + enemy.name + " x:" + enemy.x);
             this.emitter = this.game.add.emitter(enemy.x, enemy.y, 200);
             this.emitter.makeParticles('deadlyparticle');//, 0, 250, false, false);
@@ -436,6 +442,47 @@ HudMoab.prototype.use = function(moabsLeft) {
 
     var idxToRemove = this.numbMoab - moabsLeft - 1;
     this.hudMoab[idxToRemove].visible = false;
+
+};
+
+var HudScore = function HudScore(game, x, y) {
+
+    this.game = game;
+    this.score = 0;
+
+    this.hudScore = [];
+
+    for(ix = 0; ix < 10; ++ix) {
+        var boomScore0 = this.game.add.sprite(x - (ix * 14), y, 'heroHudNumbers');
+        boomScore0.scale.setTo(3, 3);
+        boomScore0.frame = 0;
+        this.hudScore.push(boomScore0);
+    }
+
+    /*var boomScore0 = this.game.add.sprite(x, y, 'heroHudNumbers');
+    var boomScore1 = this.game.add.sprite(x - 14, y, 'heroHudNumbers');
+    boomScore0.scale.setTo(3, 3);
+    boomScore1.scale.setTo(3, 3);
+
+    boomScore0.frame = 0; // right-most
+    boomScore1.frame = 1;*/
+
+};
+
+HudScore.prototype.updateScore = function(newScore) {
+
+    console.log("Update score:"+newScore);
+    
+    var scores = "12345".split("").reverse().join("");
+    var scores2 = "12345".split("").reverse();
+
+    /*for(u = 1; u < scores.length; ++u) {
+        this.hudScore[u-1].frame = parseInt(scores.charAt(u));
+    }*/
+
+    for(u = 0; u < scores2.length; ++u) {
+        this.hudScore[u].frame = parseInt(scores2[u]);
+    }
 
 };
 

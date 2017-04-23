@@ -48,8 +48,9 @@ BasicGame.Preloader.prototype = {
 		this.load.image('deadlyparticle', 'assets/image/ghostparticle.png');
 
 		this.load.image('heroHud', 'assets/image/hud.png');
-		this.load.spritesheet('heroHudHealth', "assets/image/health-bar2.png", 64, 9, 7);
+		this.load.spritesheet('heroHudHealth', "assets/image/health-bar.png", 64, 9, 7);
 		this.load.image('heroHudMoab', 'assets/image/bomb.png');
+		this.load.spritesheet('heroHudNumbers', "assets/image/score-numbers.png", 4, 8);
 
 	},
 
