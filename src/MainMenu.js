@@ -17,8 +17,15 @@ BasicGame.MainMenu.prototype = {
 		//	Here all we're doing is playing some music and adding a picture and button
 		//	Naturally I expect you to do something significantly better :)
 
-		this.music = this.add.audio('titleMusic');
-		this.music.play();
+		if(this.music === null) {
+			this.music = this.add.audio('titleMusic');
+			this.music.loop = true;
+		}
+
+		if(this.music !== null && !this.music.isPlaying)
+		{
+			this.music.play();
+		}
 
 		this.background = this.add.sprite(0, 0, 'titlepage');
 		this.background.x = 0;

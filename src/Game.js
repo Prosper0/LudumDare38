@@ -62,6 +62,7 @@ BasicGame.Game.prototype = {
     create: function () {
 
         this.music = this.add.audio('gameMusic');
+        this.music.loop = true;
 		this.music.play();
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
