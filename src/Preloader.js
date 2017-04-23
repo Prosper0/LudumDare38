@@ -58,6 +58,7 @@ BasicGame.Preloader.prototype = {
 		this.load.image('gameMistOfWarFront', 'assets/image/front-mist.png');
 
 		this.load.image('heroWeaponCannon', 'assets/image/cannon-tower.png');
+		this.load.spritesheet('heroWeaponCannonAnim', "assets/image/cannon-fire.png", 32, 128);
 		this.load.image('bullet', 'assets/image/bullet.png');
 
 		this.load.image('enemy1', 'assets/image/enemy01.png');
