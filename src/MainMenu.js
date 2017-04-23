@@ -26,7 +26,7 @@ BasicGame.MainMenu.prototype = {
         this.background.smoothed = false;
 
 		//this.playButton = this.add.button(400, 600, 'playButton', this.startGame, this, 'buttonOver', 'buttonOut', 'buttonOver');
-		this.playButton = this.add.button(100, 300, 'playButton', this.startGame, this);
+		this.playButton = this.add.button(600, 400, 'playButton', this.startGame, this);
 
 	},
 

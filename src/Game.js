@@ -3,9 +3,12 @@ BasicGame.Game = function (game) {
 
     //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
 
+    this.internalGameState = null;
+
     //this.background = null;
     this.backgroundSky = null;
     this.backgroundGround = null;
+    this.backgroundGO = null;
     this.heroCannon = null;
     this.hud = null;
     this.heroLife = 0;
@@ -56,7 +59,8 @@ BasicGame.Game.prototype = {
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        this.heroLife = 7;
+        this.internalGameState = 'play';
+        this.heroLife = 1;
         this.numbMoab = 3;
 
         //this.background = this.add.sprite(0, 0, 'gameBackground');
@@ -90,11 +94,29 @@ BasicGame.Game.prototype = {
         this.heroCannon.anchor.setTo(0.5, 0.5);
         this.heroCannon.scale.setTo(3, 3);
 
+        // Keyboard
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-        this.moabKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
+        this.moabKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
         this.moabKey.onDown.add(this.moab, this);
+
+        //this.game.input.keyboard.onDownCallback = this.quitAfterKeyPress;
+
+        //this.game.input.onDown.add(this.quitAfterKeyPress;
+        
+        /*function(e) {   
+            
+            console.log("Key:"+e.keyCode+" IntState:"+this.internalGameState);
+
+            if(this.internalGameState === 'dead') {
+                console.log("YOU DEAD, going to main menu");
+                this.state.start('MainMenu');
+            } else {
+                console.log("You aint dead!");
+            }
+            
+        };*/
 
         //  Create some aliens
         this.enemies = [];
@@ -106,6 +128,12 @@ BasicGame.Game.prototype = {
         this.game.physics.enable(this.hud, Phaser.Physics.ARCADE);
         this.hud.scale.setTo(60, 30);
         //this.hud.body.setSize(900, 100, 10, 10);
+
+        this.backgroundGO = this.add.sprite(0, 0, 'gameBackgroundGameOver');
+        this.backgroundGO.x = 0;
+        this.backgroundGO.y = 0;
+        this.backgroundGO.scale.setTo(3, 3);
+        this.backgroundGO.visible = false;
 
     },
 
@@ -122,6 +150,7 @@ BasicGame.Game.prototype = {
 
         if (this.fireKey.isDown)
         {
+            this.quitAfterKeyPress();
             this.fireBullet();
         } 
         /*else if (this.cursors.up.isDown) 
@@ -160,11 +189,34 @@ BasicGame.Game.prototype = {
 
     quitGame: function (pointer) {
 
-        //  Here you should destroy anything you no longer need.
-        //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
+        //this.game.camera.fade(0x000000, 4000);
+        //this.game.camera.onFadeComplete.add(this.resetFade, this);
+        this.internalGameState = 'dead';
+        this.spawnEnemyAllowed = false;
+        this.backgroundGO.visible = true;
+        this.game.world.bringToTop(this.backgroundGO);
+        this.game.camera.flash(0xff0000, 1000);
+        //this.state.start('MainMenu');
 
-        //  Then let's go back to the main menu.
-        this.state.start('MainMenu');
+    },
+
+    quitAfterKeyPress: function () {
+
+        console.log("IntState:"+this.internalGameState);
+
+        if(this.internalGameState === 'dead') {
+            console.log("YOU DEAD, going to main menu");
+            this.state.start('MainMenu');
+        } else {
+            console.log("You aint dead!");
+        }
+
+    },
+
+    resetFade: function () {
+
+        //this.game.camera.resetFX();
+        //this.state.start('MainMenu');
 
     },
 
@@ -173,6 +225,10 @@ BasicGame.Game.prototype = {
         //this.game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
         //this.game.debug.spriteInfo(this.hud, 32, 400);
         //this.game.debug.body(this.hud);
+        this.game.debug.text('HeroScore: ' + this.heroScore, 32, 32);
+        this.game.debug.text('Moabs: ' + this.numbMoab, 32, 50);
+        this.game.debug.text('Enemy cnt: ' + this.enemies.length, 32, 60);
+        this.game.debug.text('Life: ' + this.heroLife, 32, 70);
 
     },
 
@@ -191,7 +247,7 @@ BasicGame.Game.prototype = {
             bullet.angle = this.heroCannon.angle;
             */
             var bullet = this.bullets.getFirstDead();
-            bullet.scale.setTo(1, 1);
+            bullet.scale.setTo(3, 3);
             bullet.reset(this.heroCannon.x - 10, this.heroCannon.y);
             bullet.angle = this.heroCannon.angle;
 
@@ -213,6 +269,7 @@ BasicGame.Game.prototype = {
         if(this.numbMoab > 0) 
         {
             this.numbMoab -= 1;
+            this.game.camera.flash(0x0000ff, 500);
             for (var i = 0; i < this.enemies.length; i++)
             {
                 if(this.enemies[i].enemyBody.alive)
@@ -225,7 +282,7 @@ BasicGame.Game.prototype = {
             this.enemies = [];
         }
 
-        console.log("HeroScore:"+this.heroScore);
+        //console.log("HeroScore:"+this.heroScore);
 
     },
 
@@ -266,7 +323,7 @@ BasicGame.Game.prototype = {
 
         if (destroyed)
         {
-            console.log('Enemy dead:' + enemy.name + " x:" + enemy.x);
+            //console.log('Enemy dead:' + enemy.name + " x:" + enemy.x);
             this.emitter = this.game.add.emitter(enemy.x, enemy.y, 200);
             this.emitter.makeParticles('deadlyparticle');//, 0, 250, false, false);
             //this.emitter.gravity = 200;
@@ -277,9 +334,9 @@ BasicGame.Game.prototype = {
             //explosionAnimation.reset(tank.x, tank.y);
             //explosionAnimation.play('kaboom', 30, false, true);
             //enemy.kill();
-            /*for (var i =0; i < enemies.length; i++) {
-                if (enemies[i].name === enemy.name) {
-                    enemies.splice(i, 1);
+            /*for (var i =0; i < this.enemies.length; i++) {
+                if (this.enemies[i].name === enemy.name) {
+                    this.enemies.splice(i, 1);
                     break;
                 }
             }*/
@@ -293,7 +350,7 @@ BasicGame.Game.prototype = {
             return obj.name === enemy.name;
         })[0];
 
-        console.log('Enemy killed:' + enemy.name + " x:" + enemy.x);
+        //console.log('Enemy kill you:' + enemy.name + " x:" + enemy.x);
         enemyObj.killEnemyByHeroKill();
 
         this.game.camera.flash(0xff0000, 500);

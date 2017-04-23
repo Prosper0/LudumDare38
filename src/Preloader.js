@@ -30,7 +30,7 @@ BasicGame.Preloader.prototype = {
 
 		//	Here we load the rest of the assets our game needs.
 		//	As this is just a Project Template I've not provided these assets, swap them for your own.
-		this.load.image('titlepage', 'assets/image/title.jpg');
+		this.load.image('titlepage', 'assets/image/menu-screen.png');
 		this.load.image('playButton', 'assets/image/play_button.png');
 		//this.load.atlas('playButton', 'assets/image/play_button.png', 'assets/images/play_button.json');
 		this.load.audio('titleMusic', ['assets/audio/main_menu.mp3']);
@@ -38,6 +38,7 @@ BasicGame.Preloader.prototype = {
 		//this.load.image('gameBackground', 'assets/image/background01.png');
 		this.load.image('gameBackgroundSky', 'assets/image/background-sky.png');
 		this.load.image('gameBackgroundGround', 'assets/image/background-ground.png');
+		this.load.image('gameBackgroundGameOver', 'assets/image/gameover-screen.png');
 
 		this.load.image('heroWeaponCannon', 'assets/image/cannon-tower.png');
 		this.load.image('bullet', 'assets/image/bullet.png');
