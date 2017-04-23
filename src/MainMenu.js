@@ -6,6 +6,7 @@ BasicGame.MainMenu = function (game) {
 	this.playButton = null;
 	this.startButton = null;
 	this.helpButton = null;
+	this.soundButton = null;
 
 };
 
@@ -45,6 +46,16 @@ BasicGame.MainMenu.prototype = {
 		this.helpButton.scale.setTo(3, 3);
 		this.helpButton.angle = -10;
 
+		this.soundButton = this.add.button(930, 690, 'soundButton', this.toggleMute, this, 1, 0, 2);
+		this.helpButton.smoothed = false;
+		this.helpButton.scale.setTo(3, 3);
+
+		if (allMusicIsMuted) {
+			this.soundButton.tint = 16711680;
+		} else {
+			this.soundButton.tint = 16777215;
+		}
+
 	},
 
 	update: function () {
@@ -66,6 +77,20 @@ BasicGame.MainMenu.prototype = {
 	helpMenu: function (pointer) {
 
 		this.state.start('HelpMenu');
+
+	},
+
+	toggleMute: function() {
+
+		if (!this.music.mute) {
+			this.music.mute = true;
+			this.soundButton.tint = 16711680;
+		} else {
+			this.music.mute = false;
+			this.soundButton.tint = 16777215;
+		}
+
+		allMusicIsMuted = this.music.mute;
 
 	}
 

@@ -36,6 +36,7 @@ BasicGame.Preloader.prototype = {
 		this.load.spritesheet('startButton', 'assets/image/start.png', 75, 26);
 		this.load.spritesheet('helpButton', 'assets/image/help.png', 62, 29);
 		this.load.spritesheet('backButton', 'assets/image/back.png', 39, 9);
+		this.load.spritesheet('soundButton', 'assets/image/audio.png', 26, 26);
 		this.load.image('helppage', 'assets/image/help-screen.png');
 		//this.load.image('startButtonInactive', 'assets/image/start-inactive.png');
 		//this.load.image('startButtonActive', 'assets/image/start-active.png');
