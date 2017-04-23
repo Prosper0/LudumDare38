@@ -181,21 +181,29 @@ BasicGame.Game.prototype = {
 
     update: function () {
 
-        if (this.cursors.left.isDown)
+        if(this.internalGameState == 'play')
         {
-            if(this.heroCannon.angle > -70)
-                this.heroCannon.angle -= 2;
-        }
-        else if (this.cursors.right.isDown)
-        {
-            if(this.heroCannon.angle < 70)
-                this.heroCannon.angle += 2;
-        }
+            if (this.cursors.left.isDown)
+            {
+                if(this.heroCannon.angle > -70)
+                    this.heroCannon.angle -= 2;
+            }
+            else if (this.cursors.right.isDown)
+            {
+                if(this.heroCannon.angle < 70)
+                    this.heroCannon.angle += 2;
+            }
 
-        if (this.fireKey.isDown)
-        {
-            this.quitAfterKeyPress();
-            this.fireBullet();
+            if (this.fireKey.isDown)
+            {
+                //this.quitAfterKeyPress();
+                this.fireBullet();
+            }
+        } else {
+            if (this.cursors.up.isDown)
+            {
+                this.quitAfterKeyPress();
+            }
         }
         /*else if (this.cursors.up.isDown)
         {
