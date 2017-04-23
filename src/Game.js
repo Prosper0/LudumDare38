@@ -71,7 +71,6 @@ BasicGame.Game = function (game) {
 BasicGame.Game.prototype = {
 
     create: function () {
-
         this.music = this.add.audio('gameMusic');
         this.music.loop = true;
 
@@ -90,12 +89,17 @@ BasicGame.Game.prototype = {
         this.internalGameState = 'play';
         this.heroLife = 7;
         this.numbMoab = 3;
+        this.stage.smoothed = false;
 
         //this.background = this.add.sprite(0, 0, 'gameBackground');
         this.backgroundSky = this.add.sprite(0, 0, 'gameBackgroundSky');
+        this.backgroundSky.smoothed = false;
         this.backgroundGround = this.add.sprite(0, 0, 'gameBackgroundGround');
+        this.backgroundGround.smoothed = false;
         this.backMist = this.add.sprite(180 * 3, 465 * 3, 'gameMistOfWarBack');
+        this.backMist.smoothed = false;
         this.frontMist = this.add.sprite(180 * 3, 465 * 3, 'gameMistOfWarFront');
+        this.frontMist.smoothed = false;
         this.backMist.anchor.setTo(0.5, 0.5);
         this.frontMist.anchor.setTo(0.5, 0.5);
         this.backgroundSky.x = 0;
@@ -124,6 +128,7 @@ BasicGame.Game.prototype = {
         this.bullets.setAll('outOfBoundsKill', true);
 
         this.heroCannon = this.add.sprite(480, 720, 'heroWeaponCannonAnim');
+        this.heroCannon.smoothed = false;
         this.game.physics.enable(this.heroCannon, Phaser.Physics.ARCADE);
         this.heroCannon.anchor.setTo(0.5, 0.5);
         this.heroCannon.scale.setTo(3, 3);
@@ -161,17 +166,20 @@ BasicGame.Game.prototype = {
         this.spawnEnemyAllowed = true;
 
         this.hud = this.add.sprite(0, 640, 'heroHud');
+        this.hud.smoothed = false;
         this.game.physics.enable(this.hud, Phaser.Physics.ARCADE);
         this.hud.scale.setTo(3, 3);
         //this.hud.body.setSize(900, 100, 10, 10);
 
         this.hudHealth = this.add.sprite(74, 683, 'heroHudHealth', 0);
+        this.hudHealth.smoothed = false;
         this.hudHealth.scale.setTo(3, 3);
 
         this.hudHealthMoabObj = new HudMoab(this.game, 96, 630, this.numbMoab);
         this.hudScoreObj = new HudScore(this.game, 860, 685);
 
         this.backgroundGO = this.add.sprite(0, 0, 'gameBackgroundGameOver');
+        this.backgroundGO.smoothed = false;
         this.backgroundGO.x = 0;
         this.backgroundGO.y = 0;
         this.backgroundGO.scale.setTo(3, 3);
@@ -309,6 +317,7 @@ BasicGame.Game.prototype = {
             */
             var bullet = this.bullets.getFirstDead();
             bullet.scale.setTo(3, 3);
+            bullet.smoothed = false;
             bullet.reset(this.heroCannon.x - 10, this.heroCannon.y);
             bullet.angle = this.heroCannon.angle;
 
@@ -488,6 +497,7 @@ var HudMoab = function HudMoab(game, x, y, numbMoab) {
     for(ix = 0; ix < this.numbMoab; ++ix) {
         var newX = x + (ix * 36);
         var boom = this.game.add.sprite(newX, y, 'heroHudMoab');
+        boom.smoothed = false;
         boom.scale.setTo(3, 3);
         this.hudMoab.push(boom);
     }
@@ -566,6 +576,7 @@ var AlienEnemy = function AlienEnemy(enemyType, enemyId, game, playerHero) { //e
     this.enemySprite = enemyType;
 
     this.enemyBody = this.game.add.sprite(x, y, this.enemySprite);
+    this.enemyBody.smoothed = false;
     this.enemyBody.animations.add('moving');
     this.enemyBody.animations.play('moving', 5, true);
 
