@@ -179,11 +179,13 @@ BasicGame.Game.prototype = {
 
         if (this.cursors.left.isDown)
         {
-            this.heroCannon.angle -= 2;
+            if(this.heroCannon.angle > -70)
+                this.heroCannon.angle -= 2;
         }
         else if (this.cursors.right.isDown)
         {
-            this.heroCannon.angle += 2;
+            if(this.heroCannon.angle < 70)
+                this.heroCannon.angle += 2;
         }
 
         if (this.fireKey.isDown)
@@ -266,6 +268,7 @@ BasicGame.Game.prototype = {
         //this.game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
         //this.game.debug.spriteInfo(this.hud, 32, 400);
         //this.game.debug.body(this.hud);
+        //this.game.debug.text('this.heroCannon.angle: ' + this.heroCannon.angle, 32, 20);
         /*this.game.debug.text('Hud.z: ' + this.hud.z, 32, 20);
         this.game.debug.text('HeroScore: ' + this.heroScore, 32, 32);
         this.game.debug.text('Moabs: ' + this.numbMoab, 32, 50);
