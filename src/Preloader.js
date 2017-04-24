@@ -59,6 +59,7 @@ BasicGame.Preloader.prototype = {
 		this.load.image('gameBackgroundSky', 'assets/image/background-sky.png');
 		this.load.image('gameBackgroundGround', 'assets/image/background-ground.png');
 		this.load.image('gameBackgroundGameOver', 'assets/image/gameover-screen.png');
+        this.load.image('gameHighScoreBoard', 'assets/image/highscore-board.png');
 		this.load.image('gameMistOfWarBack', 'assets/image/back-mist02.png');
 		this.load.image('gameMistOfWarFront', 'assets/image/front-mist02.png');
 
@@ -75,6 +76,7 @@ BasicGame.Preloader.prototype = {
 		this.load.spritesheet('heroHudHealth', "assets/image/health-bar.png", 64, 9, 7);
 		this.load.image('heroHudMoab', 'assets/image/bomb.png');
 		this.load.spritesheet('heroHudNumbers', "assets/image/score-numbers.png", 4, 8);
+        this.load.spritesheet('highScoreNumbers', 'assets/image/green-numbers.png', 8, 16);
 
 	},
 
