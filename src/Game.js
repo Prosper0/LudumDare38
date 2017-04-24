@@ -99,6 +99,7 @@ BasicGame.Game.prototype = {
         this.numbMoab = 3;
         this.stage.smoothed = false;
         this.heroScore = 0;
+        this.fireRate = 500;
 
         //this.background = this.add.sprite(0, 0, 'gameBackground');
         this.backgroundSky = this.add.sprite(0, 0, 'gameBackgroundSky');
@@ -495,8 +496,6 @@ BasicGame.Game.prototype = {
                 }
             }
 
-            
-
             if(!this.spawnDone[0] && this.heroScore == 2000 && this.heroScore <= 2100) {
                 this.spawnDone[0] = true;
                 this.enemySpawnInfo.ufo.spawnTime -= 1000;
@@ -520,6 +519,7 @@ BasicGame.Game.prototype = {
             }
 
             if(!this.spawnDone[4] && this.heroScore >= 7000 && this.heroScore <= 7100) {
+                this.fireRate = 200;
                 this.spawnDone[4] = true;
                 this.enemySpawnInfo.skull.spawnTime = 1000;
                 this.enemySpawnInfo.ufo.spawnTime = 1000;
