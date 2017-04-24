@@ -251,6 +251,9 @@ BasicGame.Game.prototype = {
         if(this.spawnEnemyAllowed == true)
         {
             var current_time = this.game.time.time;
+            this.createEnemy(current_time);
+            
+            /* OLD SPAWN TYPE
             if(current_time - this.lastSpawnTime > this.enemiesSpawnTime){
                 this.enemiesSpawnTime = this.game.rnd.integerInRange(2500, 5000);
 
@@ -264,7 +267,7 @@ BasicGame.Game.prototype = {
 
                 this.lastSpawnTime = current_time;
                 this.createEnemy();
-            }
+            }*/
         }
 
         /*if (this.cursors.up.isDown)
@@ -425,7 +428,7 @@ BasicGame.Game.prototype = {
 
     },
 
-    createEnemy: function () {
+    createEnemy: function (current_time) {
 
         /*
         var enemy1 = this.add.sprite(this.game.world.randomX, 180, 'enemy1');
@@ -439,12 +442,100 @@ BasicGame.Game.prototype = {
             this.enemies.push(enemy1);
         }*/
 
+        //if(current_time - this.lastSpawnTime > this.enemiesSpawnTime)
+        {
+
+            var chanceOfIt = this.game.rnd.integerInRange(1, 5);
+            var createUfo = chanceOfIt % enemySpawnInfo.ufo.spawnChance; 
+            var createSkull = chanceOfIt % enemySpawnInfo.skull.spawnChance;
+
+            if(createUfo == 0) // Chance of creating it
+            {
+                if(this.heroScore >= enemySpawnInfo.ufo.spawnScore) { // got enough score for creation of it?
+                    //if(current_time - this.lastSpawnTime > enemySpawnInfo.ufo.spawnTime) {
+                        if(current_time - enemySpawnInfo.ufo.lastSpawnTime > enemySpawnInfo.ufo.spawnTime) {
+                            enemySpawnInfo.ufo.lastSpawnTime = current_time;
+                            this.enemies.push(new EnemyUfo(this.enemies.length + 1, this.game, this.heroCannon));
+                        }
+                    //}
+                }
+            }
+
+            if(createSkull == 0)
+            {
+                if(this.heroScore >= enemySpawnInfo.skull.spawnScore) { // got enough score for creation of it?
+                    //if(current_time - this.lastSpawnTime > enemySpawnInfo.ufo.spawnTime) {
+                        if(current_time - enemySpawnInfo.skull.lastSpawnTime > enemySpawnInfo.skull.spawnTime) {
+                            enemySpawnInfo.skull.lastSpawnTime = current_time;
+                            this.enemies.push(new EnemySkull(this.enemies.length + 1, this.game, this.heroCannon));
+                        }
+                    //}
+                }
+            }
+
+            
+
+            if(!spawnDone[0] && this.heroScore == 2000 && this.heroScore <= 2100) {
+                spawnDone[0] = true;
+                enemySpawnInfo.ufo.spawnTime -= 1000;
+            }
+
+            if(!spawnDone[1] && this.heroScore >= 3000 && this.heroScore <= 3100) {
+                spawnDone[1] = true;
+                enemySpawnInfo.skull.spawnTime -= 1000;
+                enemySpawnInfo.ufo.spawnTime -= 1000;
+            }
+
+            if(!spawnDone[2] && this.heroScore >= 4000 && this.heroScore <= 4100) {
+                spawnDone[2] = true;
+                enemySpawnInfo.skull.spawnChance -= 1;
+            }
+
+            if(!spawnDone[3] && this.heroScore >= 4500 && this.heroScore <= 4600) {
+                spawnDone[3] = true;
+                enemySpawnInfo.skull.spawnTime -= 1000;
+                enemySpawnInfo.ufo.spawnTime -= 1000;
+            }
+
+            if(!spawnDone[4] && this.heroScore >= 7000 && this.heroScore <= 7100) {
+                spawnDone[4] = true;
+                enemySpawnInfo.skull.spawnTime = 1000;
+                enemySpawnInfo.ufo.spawnTime = 1000;
+            }
+
+            
+
+            /*this.enemiesSpawnTime = this.game.rnd.integerInRange(2500, 5000);
+
+            if(this.heroScore > 1000 && this.heroScore < 2000) {
+                this.enemiesSpawnTime = this.game.rnd.integerInRange(2000, 4000);
+            } else if(this.heroScore > 3000 && this.heroScore < 4000) {
+                this.enemiesSpawnTime = this.game.rnd.integerInRange(1000, 2500);
+            } else if(this.heroScore >= 4000) {
+                this.enemiesSpawnTime = this.game.rnd.integerInRange(500, 1500);
+            }
+
+            this.lastSpawnTime = current_time;
+
+            this.enemiesTotal = this.enemiesTotal + 1;
+
+            this.enemies.push(new EnemyUfo(this.enemiesTotal, this.game, this.heroCannon));
+            this.enemiesTotal = this.enemiesTotal + 1;
+            this.enemies.push(new EnemySkull(this.enemiesTotal, this.game, this.heroCannon));*/
+                
+            }
+
+
+        
+
+        /* OLD
         this.enemiesTotal = this.enemiesTotal + 1;
         //this.enemies.push(new AlienEnemy("enemy1", this.enemiesTotal, this.game, this.heroCannon));
         this.enemies.push(new EnemyUfo(this.enemiesTotal, this.game, this.heroCannon));
         this.enemiesTotal = this.enemiesTotal + 1;
         //this.enemies.push(new AlienEnemy("enemy1", this.enemiesTotal, this.game, this.heroCannon));
         this.enemies.push(new EnemySkull(this.enemiesTotal, this.game, this.heroCannon));
+        */
 
     },
 
@@ -464,6 +555,7 @@ BasicGame.Game.prototype = {
         {
             this.heroScore += enemyObj.score;
             this.hudScoreObj.updateScore(this.heroScore);
+            enemyObj.alive = false;
             //console.log('Enemy dead:' + enemy.name + " x:" + enemy.x);
             this.emitter = this.game.add.emitter(enemy.x, enemy.y, 200);
             this.emitter.makeParticles('deadlyparticle');//, 0, 250, false, false);
@@ -741,6 +833,7 @@ var EnemyUfo = function (index, game, playerHero) {
     this.enemySpeed = 100;
     this.enemySpeedTime = 3000;
     this.score = 100;
+
     AlienEnemy.call(this, this.enemyType, index, game, playerHero);
 
 }
@@ -757,6 +850,7 @@ var EnemySkull = function (index, game, playerHero) {
     this.enemySpeed = 200;
     this.enemySpeedTime = 2000;
     this.score = 150;
+
     AlienEnemy.call(this, this.enemyType, index, game, playerHero);
 
 }
@@ -779,3 +873,23 @@ var EnemyFrog = function (index, game, playerHero) {
 
 EnemyFrog.prototype.constructor = EnemyFrog;
 EnemyFrog.prototype = Object.create(AlienEnemy.prototype);
+
+var enemySpawnInfo = {
+  "skull": 
+    {
+        "spawnTime": 5000,
+        "spawnScore": 400,
+        "spawnChance": 2,
+        "lastSpawnTime": 0
+    }
+  ,
+  "ufo": 
+    {
+        "spawnTime": 3000,
+        "spawnScore": 0,
+        "spawnChance": 1,
+        "lastSpawnTime": 0
+    }
+};
+
+var spawnDone = [false, false, false, false, false];
