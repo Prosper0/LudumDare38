@@ -33,6 +33,11 @@ BasicGame.Preloader.prototype = {
 		//	As this is just a Project Template I've not provided these assets, swap them for your own.
 		this.load.image('titlepage', 'assets/image/menu-screen.png');
 		this.load.image('playButton', 'assets/image/play_button.png');
+		this.load.image('cleanBackground', 'assets/image/clean-background.png');
+		this.load.image('gameTitle', 'assets/image/aotpv-title.png');
+		this.load.image('gameOverMan', 'assets/image/game-over-man.png');
+		this.load.image('pressAnyKey', 'assets/image/press-any-key.png');
+        this.load.image('helpText', 'assets/image/help-text.png');
 		this.load.spritesheet('startButton', 'assets/image/start.png', 75, 26);
 		this.load.spritesheet('helpButton', 'assets/image/help.png', 62, 29);
 		this.load.spritesheet('backButton', 'assets/image/back.png', 39, 9);

@@ -18,8 +18,9 @@ BasicGame.Game = function (game) {
     this.backgroundGround = null;
     this.backMist = null;
     this.frontMist = null;
-    this.backMistAngle = 0.0;
-    this.frontMistAngle = 0.0;
+    this.backgroundClean = null;
+    this.gameOverMan = null;
+    this.pressAnyKey = null;
     this.backgroundGO = null;
     this.heroCannon = null;
     this.hud = null;
@@ -186,6 +187,22 @@ BasicGame.Game.prototype = {
         this.backgroundGO.scale.setTo(3, 3);
         this.backgroundGO.visible = false;
 
+        this.backgroundClean = this.add.sprite(0, 0, 'cleanBackground');
+        this.backgroundClean.smoothed = false;
+        this.backgroundClean.x = 0;
+        this.backgroundClean.y = 0;
+        this.backgroundClean.scale.setTo(3, 3);
+        this.backgroundClean.visible = false;
+
+        this.gameOverMan = this.add.sprite(183, 72, 'gameOverMan');
+        this.gameOverMan.smoothed = false;
+        this.gameOverMan.scale.setTo(3, 3);
+        this.gameOverMan.visible = false;
+
+        this.pressAnyKey = this.add.sprite(162, 651, 'pressAnyKey');
+        this.pressAnyKey.smoothed = false;
+        this.pressAnyKey.scale.setTo(3, 3);
+        this.pressAnyKey.visible = false;
     },
 
     update: function () {
@@ -255,8 +272,8 @@ BasicGame.Game.prototype = {
 
         this.bullets.forEachAlive( this.killIfBulletIsOutOfWorld, this ); // function(box) {  if(box.y < 300) { box.kill(); }  }
 
-        this.frontMist.angle += 0.1;
-        this.backMist.angle += 0.03;
+        this.frontMist.angle += 0.05;
+        this.backMist.angle += 0.01;
     },
 
     quitGame: function (pointer) {
@@ -265,8 +282,19 @@ BasicGame.Game.prototype = {
         //this.game.camera.onFadeComplete.add(this.resetFade, this);
         this.internalGameState = 'dead';
         this.spawnEnemyAllowed = false;
-        this.backgroundGO.visible = true;
-        this.game.world.bringToTop(this.backgroundGO);
+        //this.backgroundGO.visible = true;
+        //this.game.world.bringToTop(this.backgroundGO);
+
+        this.backgroundClean.visible = true;
+        this.gameOverMan.visible = true;
+        this.pressAnyKey.visible = true;
+
+        this.game.world.bringToTop(this.backgroundClean);
+        this.game.world.bringToTop(this.backMist);
+        this.game.world.bringToTop(this.frontMist);
+        this.game.world.bringToTop(this.gameOverMan);
+        this.game.world.bringToTop(this.pressAnyKey);
+
         this.game.camera.flash(0xff0000, 1000);
         this.music.volume = 0.4;
         this.sndAlien1.mute = true;
